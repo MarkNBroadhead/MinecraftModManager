@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -57,15 +58,16 @@ class Utils {
     }
 
     static void deleteOldMods() {
+        LOGGER.info("Deleting old managed mods");
         try {
-            List<String> copiedMods = fileLinesToList(CACHE_FILE);
+            HashSet<String> copiedMods = new HashSet<>(fileLinesToList(WRITE_CACHE_FILE));
             for (String filename : copiedMods) {
+                Path path = Paths.get(App.MINECRAFT_MOD_DIR + File.separator + filename);
                 try {
-                    Path path = Paths.get(App.MINECRAFT_MOD_DIR + File.separator + filename);
                     Files.delete(path);
                     Log.logFileOperation(Log.FileOperation.DELETE, path.toString());
                 } catch (NoSuchFileException e) {
-                    LOGGER.info("Attempted to delete " + App.MINECRAFT_MOD_DIR + " no such file or directory", e);
+                    LOGGER.info("Unable to delete " + path + " no such file or directory");
                 } catch (DirectoryNotEmptyException e) {
                     Log.logAndThrow(App.MINECRAFT_MOD_DIR + " directory is not empty.", e);
                 } catch (IOException e) {

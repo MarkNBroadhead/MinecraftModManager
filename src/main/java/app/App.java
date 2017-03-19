@@ -34,11 +34,10 @@ public class App {
         updateGitRepo();
         try {
             if (!Utils.isMinecraftRunning()) {
-                Utils.deleteOldMods();  // TODO fix
+                Utils.deleteOldMods();
                 Utils.addNewMods();
             } else {
-                RuntimeException e = new RuntimeException("Minecraft is running");
-                Log.logAndThrow("Cannot update mods while Minecraft is running. Please shut down Minecraft to continue", e);
+                Log.logAndThrow("Cannot update mods while Minecraft is running. Please shut down Minecraft to continue");
             }
         } catch (IOException e) {
             Log.logAndThrow("Issue updating mods", e);
