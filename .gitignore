@@ -1,0 +1,20 @@
+**/target/
+/target/
+*/target/*
+.classpath
+.project
+.settings
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*.iml
+*.idea
+
+# Project specific files
+MinecraftMods
+logs/*
+write_cache
+cache
