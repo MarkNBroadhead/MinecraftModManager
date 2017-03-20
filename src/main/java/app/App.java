@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class App {
-//    static final String MINECRAFT_DIR = "C:\\Users\\orcsl\\Documents\\Curse\\Minecraft\\Instances\\FTB Beyond (3)";
-    static final String MINECRAFT_DIR = "C:\\Users\\orcsl\\Desktop\\testMinecraftFolder";
+    static final String MINECRAFT_DIR = "C:\\Users\\orcsl\\Documents\\Curse\\Minecraft\\Instances\\FTB Beyond";
     static final String MINECRAFT_MOD_DIR = MINECRAFT_DIR + File.separator + "mods";
     static final String MINECRAFT_RESOURCE_PACK_DIR = MINECRAFT_DIR + File.separator + "resourcepacks";
     private static final Logger LOGGER = LogManager.getLogger(App.class);
@@ -30,7 +29,7 @@ public class App {
         updateMods();
     }
 
-    private static void updateMods() throws RuntimeException {
+    public static void updateMods() throws RuntimeException {
         updateGitRepo();
         try {
             if (!Utils.isMinecraftRunning()) {

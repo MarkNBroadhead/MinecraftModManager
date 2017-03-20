@@ -3,8 +3,10 @@ package app;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 class Git {
     private static final Logger LOGGER = LogManager.getLogger(Git.class);
@@ -38,5 +40,18 @@ class Git {
         while (process.isAlive()) {
         }
         LOGGER.info("Git pull complete");
+    }
+
+    static String getLastCommitDate() throws IOException {
+        LOGGER.info("Checking for new mods...");
+        Process process = new ProcessBuilder(Utils.GIT_FILENAME, "log", "-1", "--format=%cd").start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        StringBuilder builder = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            builder.append(line);
+            builder.append(System.getProperty("line.separator"));
+        }
+        return builder.toString();
     }
 }
