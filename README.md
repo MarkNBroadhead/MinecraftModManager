@@ -1,7 +1,7 @@
 # MinecraftModManager
 MinecraftModManager is a simple application built to help Mark Broadhead's friends make sure they're all running the same mods and versions when connecting to their Feed The Beast Minecraft server.
 
-![MinecraftModManager on macOS](http://imgur.com/a/YOBfX "Screenshot of MinecraftModManager")
+![MinecraftModManager on macOS](screenshot.png?raw=true"Screenshot of MinecraftModManager")
 
 
 ## Usage
