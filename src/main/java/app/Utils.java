@@ -47,6 +47,18 @@ class Utils {
         return fileNames;
     }
 
+    static HashSet<String> getSetOfDirectoriesInDir(String dir) {
+        File folder = new File(dir);
+        File[] directories = folder.listFiles(File::isDirectory);
+        HashSet<String> fileNames = new HashSet<>();
+        if (directories != null) {
+            for (File file : directories) {
+                fileNames.add(file.getName() + "/");
+            }
+        }
+        return fileNames;
+    }
+
     static List<String> truncateVersionFromModFileName(List<String> fileNames) {
         String pattern = "([a-zA-Z0-9\\s-]+)([-_\\s\\[])(.+)(.jar)";
         List<String> truncatedNames = new ArrayList<>();
