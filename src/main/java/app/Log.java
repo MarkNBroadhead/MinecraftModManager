@@ -30,9 +30,9 @@ class Log {
         public String toString() { return present; }
     }
 
-    static void logAndThrow(String message, Exception e) {
-        LOGGER.error(message, e);
-        throw new RuntimeException(message, e);
+    static void logAndThrow(String message, Exception ex) {
+        LOGGER.error(message, ex);
+        throw new RuntimeException(message, ex);
     }
 
     static void logAndThrow(String message) {
@@ -41,13 +41,11 @@ class Log {
     }
 
     static void logFileOperation(FileOperation operation, String filename) {
-        try {
-            FileWriter fileWriter = new FileWriter(FILE_OPERATION_LOG, true);
+        try (FileWriter fileWriter = new FileWriter(FILE_OPERATION_LOG, true)) {
             fileWriter.write(LocalDateTime.now() + " -- " + operation.getPresentParticiple() + " " + filename + "\n");
-            fileWriter.close();
             LOGGER.debug(operation.getPresentParticiple() + " " + filename);
-        } catch (IOException e) {
-            LOGGER.error("Error " + operation.getPresentParticiple() + " to " + FILE_OPERATION_LOG + " log");
+        } catch (IOException ex) {
+            LOGGER.error("Error " + operation.getPresentParticiple() + " to " + FILE_OPERATION_LOG + " log", ex);
         }
     }
 }

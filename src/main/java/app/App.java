@@ -22,11 +22,15 @@ public class App {
             "                                                                                                         __/ |            \n" +
             "                                                                                                        |___/             \n";
 
+    private App() {
+    }
+
     public static void main(String[] args) {
         LOGGER.info("Minecraft Mod Manager starting at: " + LocalDateTime.now());
         LOGGER.info(BANNER);
         Utils.touchCacheFiles();
         updateMods();
+        LOGGER.info("Curse minecraft folders: " + MinecraftScanner.getCurseMinecraftFolders().toString());
     }
 
     public static void updateMods() throws RuntimeException {
@@ -38,8 +42,8 @@ public class App {
             } else {
                 Log.logAndThrow("Cannot update mods while Minecraft is running. Please shut down Minecraft to continue");
             }
-        } catch (IOException e) {
-            Log.logAndThrow("Issue updating mods", e);
+        } catch (IOException ex) {
+            Log.logAndThrow("Issue updating mods", ex);
         }
     }
 
@@ -47,14 +51,18 @@ public class App {
         if (!Git.modRepoExists()) {
             try {
                 Git.cloneModRepo();
-            } catch (IOException e) {
-                Log.logAndThrow("Cannot clone mod repo", e);
+            } catch (IOException ex) {
+                Log.logAndThrow("Cannot clone mod repo", ex);
+            } catch (InterruptedException ex) {
+                Log.logAndThrow("Repository clone interrupted", ex);
             }
         } else {
             try {
                 Git.fetchNewestMods();
-            } catch (IOException e) {
-                Log.logAndThrow("Cannot update mod repo", e);
+            } catch (IOException ex) {
+                Log.logAndThrow("Cannot update mod repo", ex);
+            } catch (InterruptedException ex) {
+                Log.logAndThrow("Repository update interrupted", ex);
             }
         }
     }

@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 class Git {
     private static final Logger LOGGER = LogManager.getLogger(Git.class);
 
+    private Git() {
+    }
+
     static boolean modRepoExists() {
         LOGGER.debug("Checking for local git mod repo folder");
         File dir = new File(Utils.LOCAL_MOD_DIR);
@@ -26,18 +29,28 @@ class Git {
         }
     }
 
-    static void cloneModRepo() throws IOException {
+    static void cloneModRepo() throws IOException, InterruptedException {
+        // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Downloading mod repository...");
         Process process = new ProcessBuilder(Utils.GIT_FILENAME, "lfs", "clone", Utils.MOD_REPO).start();
-        while (process.isAlive()) {
+        try {
+            process.waitFor();
+        } catch (InterruptedException ex) {
+            LOGGER.error(ex);
+            throw ex;
         }
         LOGGER.info("Cloning process complete");
     }
 
-    static void fetchNewestMods() throws IOException {
+    static void fetchNewestMods() throws IOException, InterruptedException {
+        // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Checking for new mods...");
         Process process = new ProcessBuilder(Utils.GIT_FILENAME, "reset", "--hard", "origin/master").start();
-        while (process.isAlive()) {
+        try {
+            process.waitFor();
+        } catch (InterruptedException ex) {
+            LOGGER.error(ex);
+            throw ex;
         }
         LOGGER.info("Git pull complete");
     }
@@ -47,7 +60,7 @@ class Git {
         Process process = new ProcessBuilder(Utils.GIT_FILENAME, "log", "-1", "--format=%cd").start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         StringBuilder builder = new StringBuilder();
-        String line = null;
+        String line;
         while ((line = reader.readLine()) != null) {
             builder.append(line);
             builder.append(System.getProperty("line.separator"));

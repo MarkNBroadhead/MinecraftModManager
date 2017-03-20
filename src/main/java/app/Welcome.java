@@ -33,6 +33,7 @@ public class Welcome extends JDialog {
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
@@ -42,13 +43,14 @@ public class Welcome extends JDialog {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         chooseFolder.addActionListener(e -> {
+            // TODO save this directory to configuration
             LOGGER.debug("User clicked on directory button");
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             try {
                 chooser.setCurrentDirectory(new File(minecraftDir.getText()));
             } catch (Exception ex) {
-                LOGGER.error("Could not open file dialog box to path in minecraftDir field");
+                LOGGER.error("Could not open file dialog box to path in minecraftDir field", ex);
             }
             int returnVal = chooser.showOpenDialog(chooseFolder);
             if (returnVal == 0) {
@@ -84,8 +86,8 @@ public class Welcome extends JDialog {
                     Thread.sleep(60000);
                     repaint();
                 }
-            } catch (Exception e) {
-                LOGGER.error("Error fetching last commit date from git repository", e);
+            } catch (Exception ex) {
+                LOGGER.error("Error fetching last commit date from git repository", ex);
             }
         }).start();
     }

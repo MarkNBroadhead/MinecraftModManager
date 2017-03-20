@@ -18,17 +18,20 @@ class Utils {
     private static final String CACHE_FILE = "cache";
     private static final String WRITE_CACHE_FILE = "write_cache";
 
+    private Utils() {
+    }
+
     static Boolean isMinecraftRunning() throws IOException {
         String line;
-        String pidInfo = "";
+        StringBuilder pidInfo = new StringBuilder();
         Boolean result = false;
         Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
         BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
         while ((line = input.readLine()) != null) {
-            pidInfo += line;
+            pidInfo.append(line);
         }
         input.close();
-        if (pidInfo.contains("minecraft.exe")) {
+        if (pidInfo.toString().contains("minecraft.exe")) {
             result = true;
         }
         LOGGER.debug("Minecraft is" + (result ? " " : " not ") + "running.");
@@ -75,19 +78,23 @@ class Utils {
             HashSet<String> copiedMods = new HashSet<>(fileLinesToList(WRITE_CACHE_FILE));
             for (String filename : copiedMods) {
                 Path path = Paths.get(App.MINECRAFT_MOD_DIR + File.separator + filename);
-                try {
-                    Files.delete(path);
-                    Log.logFileOperation(Log.FileOperation.DELETE, path.toString());
-                } catch (NoSuchFileException e) {
-                    LOGGER.info("Unable to delete " + path + " no such file or directory");
-                } catch (DirectoryNotEmptyException e) {
-                    Log.logAndThrow(App.MINECRAFT_MOD_DIR + " directory is not empty.", e);
-                } catch (IOException e) {
-                    Log.logAndThrow("Permissions issue while deleting " + filename, e);
-                }
+                deleteFile(filename, path);
             }
-        } catch (IOException e) {
-            Log.logAndThrow("Could not delete old mods", e);
+        } catch (IOException ex) {
+            Log.logAndThrow("Could not delete old mods", ex);
+        }
+    }
+
+    private static void deleteFile(String filename, Path path) {
+        try {
+            Files.delete(path);
+            Log.logFileOperation(Log.FileOperation.DELETE, path.toString());
+        } catch (NoSuchFileException ex) {
+            LOGGER.debug("Unable to delete " + path + " no such file or directory", ex);
+        } catch (DirectoryNotEmptyException ex) {
+            Log.logAndThrow(App.MINECRAFT_MOD_DIR + " directory is not empty.", ex);
+        } catch (IOException ex) {
+            Log.logAndThrow("Permissions issue while deleting " + filename, ex);
         }
     }
 
@@ -99,17 +106,16 @@ class Utils {
         List<String> mods = getListOfFilesInDir(LOCAL_MOD_DIR);
         for (String mod : mods) {
             try {
-//                mod = Paths.get("").toAbsolutePath().toString() + LOCAL_MOD_DIR + File.separator + mod;
                 Path modPath = Paths.get(LOCAL_MOD_DIR + File.separator + mod).toAbsolutePath();
                 Files.copy(modPath, Paths.get(App.MINECRAFT_MOD_DIR + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
                 Log.logFileOperation(Log.FileOperation.COPY, mod);
-            } catch (IOException e) {
-                Log.logAndThrow("Cannot copy " + mod + " to minecraft mod folder " + App.MINECRAFT_MOD_DIR + File.separator, e);
+            } catch (IOException ex) {
+                Log.logAndThrow("Cannot copy " + mod + " to minecraft mod folder " + App.MINECRAFT_MOD_DIR + File.separator, ex);
             }
             try {
                 recordModNames(WRITE_CACHE_FILE);
-            } catch (IOException e) {
-                Log.logAndThrow("Cannot access cache file " + CACHE_FILE, e);
+            } catch (IOException ex) {
+                Log.logAndThrow("Cannot access cache file " + CACHE_FILE, ex);
             }
         }
     }
@@ -139,8 +145,8 @@ class Utils {
         try {
             touch(new File(CACHE_FILE));
             touch(new File(WRITE_CACHE_FILE));
-        } catch (IOException e) {
-            LOGGER.error("Unable to create new cache files", e);
+        } catch (IOException ex) {
+            LOGGER.error("Unable to create new cache files", ex);
         }
     }
 
@@ -153,7 +159,9 @@ class Utils {
         if (!file.exists()) {
             new FileOutputStream(file).close();
         }
-        file.setLastModified(timestamp);
+        if (!file.setLastModified(timestamp)) {
+            throw new IOException("Could not set last modified for " + file.getName());
+        }
     }
 
     public static String getCurrentDirectory() throws IOException {
