@@ -32,7 +32,7 @@ class Git {
     static void cloneModRepo() throws IOException, InterruptedException {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Downloading mod repository...");
-        Process process = new ProcessBuilder(Utils.GIT_FILENAME, "lfs", "clone", Utils.MOD_REPO).start();
+        Process process = new ProcessBuilder(Utils.GIT_LFS, "clone", Utils.MOD_REPO).start();
         try {
             process.waitFor();
         } catch (InterruptedException ex) {
@@ -45,7 +45,7 @@ class Git {
     static void fetchNewestMods() throws IOException, InterruptedException {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Checking for new mods...");
-        Process process = new ProcessBuilder(Utils.GIT_FILENAME, "reset", "--hard", "origin/master").start();
+        Process process = new ProcessBuilder(Utils.GIT, "reset", "--hard", "origin/master").start();
         try {
             process.waitFor();
         } catch (InterruptedException ex) {
@@ -57,7 +57,7 @@ class Git {
 
     static String getLastCommitDate() throws IOException {
         LOGGER.info("Checking for new mods...");
-        Process process = new ProcessBuilder(Utils.GIT_FILENAME, "log", "-1", "--format=%cd").start();
+        Process process = new ProcessBuilder(Utils.GIT, "log", "-1", "--format=%cd").start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         StringBuilder builder = new StringBuilder();
         String line;

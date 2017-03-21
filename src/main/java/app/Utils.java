@@ -13,7 +13,8 @@ import java.util.stream.Stream;
 class Utils {
     private static final Logger LOGGER = LogManager.getLogger(Utils.class);
     static final String MOD_REPO = "https://github.com/MarkNBroadhead/MinecraftMods.git";
-    static final String GIT_FILENAME = "git.exe";
+    static final String GIT = "git.exe";
+    static final String GIT_LFS = "git-lfs.exe";
     static final String LOCAL_MOD_DIR = "MinecraftMods" + File.separator + "mods";
     private static final String CACHE_FILE = "cache";
     private static final String WRITE_CACHE_FILE = "write_cache";
