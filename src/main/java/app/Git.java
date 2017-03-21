@@ -76,7 +76,6 @@ class Git {
             return "git";
         } else {
             throw Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
-            return null;
         }
     }
 
@@ -87,7 +86,6 @@ class Git {
             return "git-lfs";
         } else {
             throw Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
-            return null;
         }
     }
 }
