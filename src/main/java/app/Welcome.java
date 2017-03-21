@@ -14,8 +14,6 @@ public class Welcome extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JCheckBox startOnBoot;
-    private JCheckBox hideOnBoot;
     private JButton update;
     private JTextField minecraftDir;
     private JButton chooseFolder;
