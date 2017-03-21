@@ -40,10 +40,10 @@ public class App {
                 Utils.deleteOldMods();
                 Utils.addNewMods();
             } else {
-                Log.logAndThrow("Cannot update mods while Minecraft is running. Please shut down Minecraft to continue");
+                throw Log.logAndThrow("Cannot update mods while Minecraft is running. Please shut down Minecraft to continue");
             }
         } catch (IOException ex) {
-            Log.logAndThrow("Issue updating mods", ex);
+            throw Log.logAndThrow("Issue updating mods", ex);
         }
     }
 
@@ -52,17 +52,17 @@ public class App {
             try {
                 Git.cloneModRepo();
             } catch (IOException ex) {
-                Log.logAndThrow("Cannot clone mod repo", ex);
+                throw Log.logAndThrow("Cannot clone mod repo", ex);
             } catch (InterruptedException ex) {
-                Log.logAndThrow("Repository clone interrupted", ex);
+                throw Log.logAndThrow("Repository clone interrupted", ex);
             }
         } else {
             try {
                 Git.fetchNewestMods();
             } catch (IOException ex) {
-                Log.logAndThrow("Cannot update mod repo", ex);
+                throw Log.logAndThrow("Cannot update mod repo", ex);
             } catch (InterruptedException ex) {
-                Log.logAndThrow("Repository update interrupted", ex);
+                throw Log.logAndThrow("Repository update interrupted", ex);
             }
         }
     }

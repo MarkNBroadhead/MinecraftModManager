@@ -30,14 +30,14 @@ class Log {
         public String toString() { return present; }
     }
 
-    static void logAndThrow(String message, Exception ex) {
+    static RuntimeException logAndThrow(String message, Exception ex) {
         LOGGER.error(message, ex);
-        throw new RuntimeException(message, ex);
+        return new RuntimeException(message, ex);
     }
 
-    static void logAndThrow(String message) {
+    static RuntimeException logAndThrow(String message) {
         LOGGER.error(message);
-        throw new RuntimeException(message);
+        return new RuntimeException(message);
     }
 
     static void logFileOperation(FileOperation operation, String filename) {

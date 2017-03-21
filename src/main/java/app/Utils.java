@@ -80,7 +80,7 @@ class Utils {
                 deleteFile(filename, path);
             }
         } catch (IOException ex) {
-            Log.logAndThrow("Could not delete old mods", ex);
+            throw Log.logAndThrow("Could not delete old mods", ex);
         }
     }
 
@@ -91,9 +91,9 @@ class Utils {
         } catch (NoSuchFileException ex) {
             LOGGER.debug("Unable to delete " + path + " no such file or directory", ex);
         } catch (DirectoryNotEmptyException ex) {
-            Log.logAndThrow(App.MINECRAFT_MOD_DIR + " directory is not empty.", ex);
+            throw Log.logAndThrow(App.MINECRAFT_MOD_DIR + " directory is not empty.", ex);
         } catch (IOException ex) {
-            Log.logAndThrow("Permissions issue while deleting " + filename, ex);
+            throw Log.logAndThrow("Permissions issue while deleting " + filename, ex);
         }
     }
 
@@ -109,12 +109,12 @@ class Utils {
                 Files.copy(modPath, Paths.get(App.MINECRAFT_MOD_DIR + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
                 Log.logFileOperation(Log.FileOperation.COPY, mod);
             } catch (IOException ex) {
-                Log.logAndThrow("Cannot copy " + mod + " to minecraft mod folder " + App.MINECRAFT_MOD_DIR + File.separator, ex);
+                throw Log.logAndThrow("Cannot copy " + mod + " to minecraft mod folder " + App.MINECRAFT_MOD_DIR + File.separator, ex);
             }
             try {
                 recordModNames(WRITE_CACHE_FILE);
             } catch (IOException ex) {
-                Log.logAndThrow("Cannot access cache file " + CACHE_FILE, ex);
+                throw Log.logAndThrow("Cannot access cache file " + CACHE_FILE, ex);
             }
         }
     }

@@ -75,7 +75,7 @@ class Git {
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             return "git";
         } else {
-            Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
+            throw Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
             return null;
         }
     }
@@ -86,7 +86,7 @@ class Git {
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             return "git-lfs";
         } else {
-            Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
+            throw Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
             return null;
         }
     }
