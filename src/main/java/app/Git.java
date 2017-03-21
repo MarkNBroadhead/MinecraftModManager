@@ -1,5 +1,6 @@
 package app;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,7 +33,7 @@ class Git {
     static void cloneModRepo() throws IOException, InterruptedException {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Downloading mod repository...");
-        Process process = new ProcessBuilder(Utils.GIT_LFS, "clone", Utils.MOD_REPO).start();
+        Process process = new ProcessBuilder(getGitLfsBinaryLoc(), "clone", Utils.MOD_REPO).start();
         try {
             process.waitFor();
         } catch (InterruptedException ex) {
@@ -45,7 +46,7 @@ class Git {
     static void fetchNewestMods() throws IOException, InterruptedException {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Checking for new mods...");
-        Process process = new ProcessBuilder(Utils.GIT, "reset", "--hard", "origin/master").start();
+        Process process = new ProcessBuilder(getGitBinaryLoc(), "reset", "--hard", "origin/master").start();
         try {
             process.waitFor();
         } catch (InterruptedException ex) {
@@ -57,7 +58,7 @@ class Git {
 
     static String getLastCommitDate() throws IOException {
         LOGGER.info("Checking for new mods...");
-        Process process = new ProcessBuilder(Utils.GIT, "log", "-1", "--format=%cd").start();
+        Process process = new ProcessBuilder(getGitBinaryLoc(), "log", "-1", "--format=%cd").start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         StringBuilder builder = new StringBuilder();
         String line;
@@ -66,5 +67,27 @@ class Git {
             builder.append(System.getProperty("line.separator"));
         }
         return builder.toString();
+    }
+
+    private static String getGitBinaryLoc() {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            return "git.exe";
+        } else if (SystemUtils.IS_OS_MAC_OSX) {
+            return "git";
+        } else {
+            Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
+            return null;
+        }
+    }
+
+    private static String getGitLfsBinaryLoc() {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            return "git-lfs.exe";
+        } else if (SystemUtils.IS_OS_MAC_OSX) {
+            return "git-lfs";
+        } else {
+            Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
+            return null;
+        }
     }
 }

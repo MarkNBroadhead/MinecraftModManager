@@ -6,8 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MinecraftScanner {
-    private static final String USER_HOME_DIR = System.getProperty("user.home");
-    private static final String CURSE_DIR = USER_HOME_DIR + "\\Documents\\Curse\\Minecraft\\Instances\\";
+    private static final String CURSE_DIR = System.getProperty("user.home") + "\\Documents\\Curse\\Minecraft\\Instances\\";
 
     private MinecraftScanner() {
     }
