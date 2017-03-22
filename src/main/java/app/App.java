@@ -1,11 +1,9 @@
 package app;
 
-import com.esotericsoftware.yamlbeans.YamlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -30,14 +28,6 @@ public class App {
     public static void main(String[] args) {
         LOGGER.info("Minecraft Mod Manager starting at: " + LocalDateTime.now());
         LOGGER.info(BANNER);
-        Config config;
-        try {
-            config = new Config();
-        } catch (YamlException ex) {
-            throw Log.logAndThrow("Error parsing yaml configuration", ex);
-        } catch (FileNotFoundException ex) {
-            throw Log.logAndThrow("Error opening yaml configuration file", ex);
-        }
 //        Utils.touchCacheFiles();
 //        updateMods();
 //        LOGGER.info("Curse minecraft folders: " + MinecraftScanner.getCurseMinecraftFolders().toString());
