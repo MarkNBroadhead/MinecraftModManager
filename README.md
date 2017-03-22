@@ -8,5 +8,4 @@ MinecraftModManager is a simple application built to help Mark Broadhead's frien
 * Make sure you have at least Java 8 installed
 * Select your Minecraft installation directory
 * Click "Update Mods"
-* Optionally set to start on system boot
 * Profit!
