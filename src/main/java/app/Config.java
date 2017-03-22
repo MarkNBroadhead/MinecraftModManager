@@ -5,13 +5,14 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public final class Config {
     private static volatile Config INSTANCE;
     private static final String CONFIG_FILE = "mmm.yml";
-    private Map settingsMap;
+    private Map settings;
 
     private Config() throws YamlException, FileNotFoundException {
         INSTANCE = this;
@@ -32,7 +33,12 @@ public final class Config {
         }
         YamlReader reader = new YamlReader(fr);
         Object object = reader.read();
-        settingsMap = (Map) object;
+        if (object == null) {
+            settings = new HashMap<>();
+        } else {
+            settings = (Map) object;
+        }
+
     }
 
     public static Config getConfig() throws YamlException, FileNotFoundException {
@@ -48,24 +54,26 @@ public final class Config {
 
     @Deprecated
     public Optional<Map> getSetings() {
-        return Optional.ofNullable(settingsMap);
+        return Optional.ofNullable(settings);
     }
 
     public Optional<Object> getSetting(String key) {
-        return Optional.ofNullable(settingsMap.get(key));
+        return Optional.ofNullable(settings != null ? settings.get(key) : null);
     }
 
     public void setSetting(String key, String value) {
-        settingsMap.put(key, value);
+        settings.put(key, value);
     }
 
     public void delSetting(String key) {
-        settingsMap.remove(key);
+        settings.remove(key);
     }
 
     public void save() throws IOException {
-        YamlWriter writer = new YamlWriter(new FileWriter(CONFIG_FILE));
-        writer.write(settingsMap);
-        writer.close();
+        if (settings != null) {
+            YamlWriter writer = new YamlWriter(new FileWriter(CONFIG_FILE));
+            writer.write(settings);
+            writer.close();
+        }
     }
 }

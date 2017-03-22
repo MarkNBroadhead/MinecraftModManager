@@ -51,7 +51,6 @@ public class Welcome extends JDialog {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         chooseFolder.addActionListener(e -> {
-            // TODO save this directory to configuration
             LOGGER.debug("User clicked on directory button");
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
