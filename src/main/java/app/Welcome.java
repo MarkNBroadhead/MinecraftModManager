@@ -4,10 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 
 public class Welcome extends JDialog {
     private static final Logger LOGGER = LogManager.getLogger(Welcome.class);
@@ -18,11 +21,18 @@ public class Welcome extends JDialog {
     private JTextField minecraftDir;
     private JButton chooseFolder;
     private JTextArea lastUpdated;
+    private Config config;
 
     public Welcome() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        try {
+            config = Config.getConfig();
+        } catch (Exception ex) {
+            LOGGER.error(ex);
+        }
+        config.getSetting("game.dir").ifPresent(dir -> minecraftDir.setText(dir.toString()));
 
         buttonOK.addActionListener(e -> onOK());
 
@@ -41,7 +51,6 @@ public class Welcome extends JDialog {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         chooseFolder.addActionListener(e -> {
-            // TODO save this directory to configuration
             LOGGER.debug("User clicked on directory button");
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -61,15 +70,39 @@ public class Welcome extends JDialog {
 
         update.addActionListener(e -> App.updateMods());
         updateUpdatedWithLastGitCommitDate();
+
+        minecraftDir.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                persistMinecraftDir(minecraftDir.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                persistMinecraftDir(minecraftDir.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                persistMinecraftDir(minecraftDir.getText());
+            }
+        });
+    }
+
+    private void persistMinecraftDir(String dir) {
+        config.setSetting("game.dir", dir);
     }
 
     private void onOK() {
-        // add your code here
+        try {
+            Config.getConfig().save();
+        } catch (IOException ex) {
+            throw Log.logAndThrow("Error saving config file", ex);
+        }
         dispose();
     }
 
     private void onCancel() {
-        // add your code here if necessary
         dispose();
     }
 

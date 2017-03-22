@@ -28,9 +28,9 @@ public class App {
     public static void main(String[] args) {
         LOGGER.info("Minecraft Mod Manager starting at: " + LocalDateTime.now());
         LOGGER.info(BANNER);
-        Utils.touchCacheFiles();
-        updateMods();
-        LOGGER.info("Curse minecraft folders: " + MinecraftScanner.getCurseMinecraftFolders().toString());
+//        Utils.touchCacheFiles();
+//        updateMods();
+//        LOGGER.info("Curse minecraft folders: " + MinecraftScanner.getCurseMinecraftFolders().toString());
     }
 
     public static void updateMods() throws RuntimeException {
