@@ -44,7 +44,7 @@ public class App extends JDialog {
         } catch (Exception ex) {
             LOGGER.error(ex);
         }
-        config.getSetting("game.dir").ifPresent(dir -> minecraftDir.setText(dir.toString()));
+        config.getModDir().ifPresent(dir -> minecraftDir.setText(dir.toString()));
 
         buttonOK.addActionListener(e -> onOK());
 

@@ -106,7 +106,9 @@ class Utils {
         for (String mod : mods) {
             try {
                 Path modPath = Paths.get(LOCAL_MOD_DIR + File.separator + mod).toAbsolutePath();
-                Files.copy(modPath, Paths.get(App.MINECRAFT_MOD_DIR + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
+                if (Config.getConfig().getModDir().isPresent()) {
+                    Files.copy(modPath, Paths.get(Config.getConfig().getModDir() + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
+                }
                 Log.logFileOperation(Log.FileOperation.COPY, mod);
             } catch (IOException ex) {
                 throw Log.logAndThrow("Cannot copy " + mod + " to minecraft mod folder " + App.MINECRAFT_MOD_DIR + File.separator, ex);

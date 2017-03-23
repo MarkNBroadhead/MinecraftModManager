@@ -33,12 +33,7 @@ public final class Config {
         }
         YamlReader reader = new YamlReader(fr);
         Object object = reader.read();
-        if (object == null) {
-            settings = new HashMap<>();
-        } else {
-            settings = (Map) object;
-        }
-
+        settings = object == null ? new HashMap<>() : (Map) object;
     }
 
     public static Config getConfig() throws YamlException, FileNotFoundException {
@@ -50,11 +45,6 @@ public final class Config {
             }
         }
         return INSTANCE;
-    }
-
-    @Deprecated
-    public Optional<Map> getSetings() {
-        return Optional.ofNullable(settings);
     }
 
     public Optional<Object> getSetting(String key) {
@@ -75,5 +65,9 @@ public final class Config {
             writer.write(settings);
             writer.close();
         }
+    }
+
+    public Optional<Object> getModDir() {
+        return getSetting("game.dir");
     }
 }
