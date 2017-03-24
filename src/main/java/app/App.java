@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class App extends JDialog {
-    static final String MINECRAFT_DIR = "C:\\Users\\orcsl\\Documents\\Curse\\Minecraft\\Instances\\FTB Beyond";
-    static final String MINECRAFT_MOD_DIR = MINECRAFT_DIR + File.separator + "mods";
     private static final Logger LOGGER = LogManager.getLogger(App.class);
     private JPanel contentPane;
     private JButton buttonOK;
@@ -45,7 +43,12 @@ public class App extends JDialog {
         } catch (Exception ex) {
             LOGGER.error(ex);
         }
-        config.getModDir().ifPresent(dir -> minecraftDir.setText(dir.toString()));
+        if (!config.getGameDir().isPresent()) {
+            config.setGameDir(MinecraftScanner.getCommonMinecraftPaths().get(0).toString());
+            // show modal letting them know defaults are being set //todo
+        }
+
+        config.getGameDir().ifPresent(dir -> minecraftDir.setText(dir.toString()));
 
         buttonOK.addActionListener(e -> onOK());
 
@@ -87,17 +90,17 @@ public class App extends JDialog {
         minecraftDir.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                persistMinecraftDir(minecraftDir.getText());
+                config.setGameDir(minecraftDir.getText());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                persistMinecraftDir(minecraftDir.getText());
+                config.setGameDir(minecraftDir.getText());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                persistMinecraftDir(minecraftDir.getText());
+                config.setGameDir(minecraftDir.getText());
             }
         });
     }

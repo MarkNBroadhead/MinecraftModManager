@@ -79,7 +79,11 @@ public final class Config implements Serializable {
         }
     }
 
-    public Optional<Object> getModDir() {
+    public Optional<Object> getGameDir() {
         return getSetting("game.dir");
+    }
+
+    public void setGameDir(String dir) {
+        setSetting("game.dir", dir);
     }
 }

@@ -75,9 +75,17 @@ class Utils {
     static void deleteOldMods() {
         LOGGER.info("Deleting old managed mods");
         try {
+            Config config = Config.getConfig();
+
+            String gameDir;
+            if (config.getGameDir().isPresent()) {
+                gameDir = config.getGameDir().get().toString();
+            } else {
+                throw new ConfigException("Cannot find Minecraft mod directory");
+            }
             HashSet<String> copiedMods = new HashSet<>(fileLinesToList(WRITE_CACHE_FILE));
             for (String filename : copiedMods) {
-                Path path = Paths.get(App.MINECRAFT_MOD_DIR + File.separator + filename);
+                Path path = Paths.get(gameDir + File.separator + filename);
                 deleteFile(filename, path);
             }
         } catch (IOException | ConfigException ex) {
@@ -107,8 +115,8 @@ class Utils {
         for (String mod : mods) {
             try {
                 Path modPath = Paths.get(LOCAL_MOD_DIR + File.separator + mod).toAbsolutePath();
-                if (Config.getConfig().getModDir().isPresent()) {
-                    Files.copy(modPath, Paths.get(Config.getConfig().getModDir() + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
+                if (Config.getConfig().getGameDir().isPresent()) {
+                    Files.copy(modPath, Paths.get(Config.getConfig().getGameDir().get() + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
                 }
                 Log.logFileOperation(Log.FileOperation.COPY, mod);
             } catch (IOException | ConfigException ex) {
