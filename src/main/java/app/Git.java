@@ -8,6 +8,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 class Git {
     private static final Logger LOGGER = LogManager.getLogger(Git.class);
@@ -46,9 +51,9 @@ class Git {
         LOGGER.info("Git pull complete");
     }
 
-    static String getLastCommitDate() throws IOException {
-        LOGGER.info("Checking for new mods...");
-        Process process = new ProcessBuilder(getGitBinaryLoc(), "log", "-1", "--format=%cd").start();
+    static String getLastModCommitDate() throws IOException {
+        LOGGER.debug("Checking git repository for last git commit date");
+        Process process = new ProcessBuilder(getGitBinaryLoc(), "--git-dir=MinecraftMods/.git", "--work-tree=MinecraftMods", "log", "-1", "--format=%cd").start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         StringBuilder builder = new StringBuilder();
         String line;
@@ -56,7 +61,16 @@ class Git {
             builder.append(line);
             builder.append(System.getProperty("line.separator"));
         }
-        return builder.toString();
+        return parseGitCommitTime(builder.toString());
+    }
+
+    private static String parseGitCommitTime(String lastCommitDate) throws IOException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM d HH:mm:ss yyyy XX");
+        String dateString = lastCommitDate.trim();
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(dateString, formatter);
+        Date commitDate = Date.from(offsetDateTime.atZoneSameInstant(ZoneId.systemDefault()).toInstant());
+        LocalDate localCommitDate = commitDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localCommitDate.toString();
     }
 
     private static String getGitBinaryLoc() {

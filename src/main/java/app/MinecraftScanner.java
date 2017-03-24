@@ -1,5 +1,6 @@
 package app;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class MinecraftScanner {
         HashSet<String> setOfDirectoriesInDir = Utils.getSetOfDirectoriesInDir(CURSE_DIR);
         HashSet<Path> paths = new HashSet<>();
         for (String dir : setOfDirectoriesInDir) {
-            paths.add(Paths.get(dir));
+            paths.add(Paths.get(CURSE_DIR + File.separator + dir));
         }
         return paths;
     }

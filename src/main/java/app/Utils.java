@@ -9,6 +9,7 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class Utils {
@@ -115,8 +116,11 @@ class Utils {
         for (String mod : mods) {
             try {
                 Path modPath = Paths.get(LOCAL_MOD_DIR + File.separator + mod).toAbsolutePath();
-                if (Config.getConfig().getGameDir().isPresent()) {
-                    Files.copy(modPath, Paths.get(Config.getConfig().getGameDir().get() + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
+                Optional<Object> gameDir = Config.getConfig().getGameDir();
+                if (gameDir.isPresent()) {
+                    String modDir = gameDir.get().toString() + File.separator + "mods";
+                    mkdirIfMissing(new File(modDir));
+                    Files.copy(modPath, Paths.get(modDir + File.separator + mod), StandardCopyOption.REPLACE_EXISTING);
                 }
                 Log.logFileOperation(Log.FileOperation.COPY, mod);
             } catch (IOException | ConfigException ex) {
@@ -128,6 +132,10 @@ class Utils {
                 throw Log.logAndReturnException("Cannot access cache file " + CACHE_FILE, ex);
             }
         }
+    }
+
+    private static Boolean mkdirIfMissing(File dir) {
+        return !dir.exists() && dir.mkdir();
     }
 
     static void recordModNames(String cacheName) throws IOException {

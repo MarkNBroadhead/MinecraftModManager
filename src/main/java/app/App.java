@@ -48,7 +48,6 @@ public class App extends JDialog {
             config.setGameDir(MinecraftScanner.getCommonMinecraftPaths().get(0).toString());
             // show modal letting them know defaults are being set //todo
         }
-
         config.getGameDir().ifPresent(dir -> minecraftDir.setText(dir.toString()));
 
         buttonOK.addActionListener(e -> onOK());
@@ -123,10 +122,9 @@ public class App extends JDialog {
         new Thread(() -> {
             try {
                 while (true) {
-                    LOGGER.debug("Checking git repository for last git commit date");
-                    String lastCommitDate = Git.getLastCommitDate();
-                    LOGGER.debug("Last commit date: " + lastCommitDate);
-                    lastUpdated.setText(lastCommitDate);
+                    String timeSinceLastCommit = Git.getLastModCommitDate();
+                    LOGGER.debug("Time since last commit: " + timeSinceLastCommit);
+                    lastUpdated.setText(timeSinceLastCommit);
                     Thread.sleep(60000);
                     repaint();
                 }
