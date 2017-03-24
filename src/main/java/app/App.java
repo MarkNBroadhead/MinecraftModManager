@@ -1,5 +1,6 @@
 package app;
 
+import app.Exception.ConfigException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -101,17 +102,6 @@ public class App extends JDialog {
         });
     }
 
-    private void persistMinecraftDir(String dir) {
-        config.setSetting("game.dir", dir);
-    }
-
-    private void onOK() {
-        try {
-            Config.getConfig().save();
-        } catch (IOException ex) {
-            throw Log.logAndThrow("Error saving config file", ex);
-        }
-        dispose();
     }
 
     private void onCancel() {
@@ -142,5 +132,12 @@ public class App extends JDialog {
         dialog.setVisible(true);
         Utils.touchCacheFiles();
         System.exit(0);
+    private void onOK() {
+        try {
+            Config.getConfig().save();
+        } catch (IOException | ConfigException ex) {
+            throw Log.logAndReturnException("Error saving config file", ex);
+        }
+        dispose();
     }
 }

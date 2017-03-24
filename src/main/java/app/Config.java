@@ -1,50 +1,62 @@
 package app;
 
+import app.Exception.ConfigException;
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-public final class Config {
-    private static volatile Config INSTANCE;
+public final class Config implements Serializable {
     private static final String CONFIG_FILE = "mmm.yml";
-    private Map settings;
+    private static final String CREATE_ERROR_MSG = "Error creating new empty configuration file " + CONFIG_FILE;
+    private static final String ACCESS_ERROR_MSG = "Error accessing configuration file " + CONFIG_FILE;
+    private static final String READ_ERROR_MSG = "Error reading or parsing configuration file " + CONFIG_FILE;
+    private static volatile Config instance;
+    private HashMap settings;
 
-    private Config() throws YamlException, FileNotFoundException {
-        INSTANCE = this;
+    private Config() throws ConfigException {
+        instance = this;
         File f = new File(CONFIG_FILE);
-        if (!f.exists()) {
+        Boolean configFileExists = f.exists();
+        if (!configFileExists) {
+            Boolean newFileCreated;
             try {
-                f.createNewFile();
+                newFileCreated = f.createNewFile();
             } catch (IOException ex) {
-                throw Log.logAndThrow("Error creating new empty configuration file " + CONFIG_FILE, ex);
+                throw Log.logAndReturnException(new ConfigException(CREATE_ERROR_MSG, ex));
+            }
+            if (!newFileCreated) {
+                throw Log.logAndReturnException(new ConfigException(CREATE_ERROR_MSG));
             }
         }
         FileReader fr;
         try {
             fr = new FileReader(CONFIG_FILE);
         } catch (FileNotFoundException ex) {
-            throw Log.logAndThrow("Cannot open configuration file " + CONFIG_FILE);
-
+            throw Log.logAndReturnException(new ConfigException(ACCESS_ERROR_MSG, ex));
         }
         YamlReader reader = new YamlReader(fr);
-        Object object = reader.read();
-        settings = object == null ? new HashMap<>() : (Map) object;
+        Object object;
+        try {
+            object = reader.read();
+        } catch (YamlException ex) {
+            throw Log.logAndReturnException(new ConfigException(READ_ERROR_MSG, ex));
+        }
+        settings = object == null ? new HashMap<>() : (HashMap) object;
     }
 
-    public static Config getConfig() throws YamlException, FileNotFoundException {
-        if (INSTANCE == null) {
+    public static Config getConfig() throws ConfigException {
+        if (instance == null) {
             synchronized (Config.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new Config();
+                if (instance == null) {
+                    instance = new Config();
                 }
             }
         }
-        return INSTANCE;
+        return instance;
     }
 
     public Optional<Object> getSetting(String key) {

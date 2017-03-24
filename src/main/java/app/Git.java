@@ -34,12 +34,7 @@ class Git {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Downloading mod repository...");
         Process process = new ProcessBuilder(getGitLfsBinaryLoc(), "clone", Utils.MOD_REPO).start();
-        try {
             process.waitFor();
-        } catch (InterruptedException ex) {
-            LOGGER.error(ex);
-            throw ex;
-        }
         LOGGER.info("Cloning process complete");
     }
 
@@ -47,12 +42,7 @@ class Git {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Checking for new mods...");
         Process process = new ProcessBuilder(getGitBinaryLoc(), "reset", "--hard", "origin/master").start();
-        try {
             process.waitFor();
-        } catch (InterruptedException ex) {
-            LOGGER.error(ex);
-            throw ex;
-        }
         LOGGER.info("Git pull complete");
     }
 
@@ -75,7 +65,7 @@ class Git {
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             return "git";
         } else {
-            throw Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
+            throw Log.logAndReturnException("Operating system type not recognized, cannot find appropriate git binary");
         }
     }
 
@@ -85,7 +75,7 @@ class Git {
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             return "git-lfs";
         } else {
-            throw Log.logAndThrow("Operating system type not recognized, cannot find appropriate git binary");
+            throw Log.logAndReturnException("Operating system type not recognized, cannot find appropriate git binary");
         }
     }
 }
