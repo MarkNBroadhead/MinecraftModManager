@@ -123,13 +123,13 @@ public class App extends JDialog {
             try {
                 while (true) {
                     String timeSinceLastCommit = Git.getLastModCommitDate();
-                    LOGGER.debug("Time since last commit: " + timeSinceLastCommit);
+                    LOGGER.debug("Most last updated: " + timeSinceLastCommit);
                     lastUpdated.setText(timeSinceLastCommit);
                     Thread.sleep(60000);
                     repaint();
                 }
             } catch (Exception ex) {
-                LOGGER.error("Error fetching last commit date from git repository", ex);
+                LOGGER.error("Error fetching last mod commit date from git repository", ex);
             }
         }).start();
     }
