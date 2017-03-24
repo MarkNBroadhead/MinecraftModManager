@@ -34,7 +34,7 @@ class Git {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Downloading mod repository...");
         Process process = new ProcessBuilder(getGitLfsBinaryLoc(), "clone", Utils.MOD_REPO).start();
-            process.waitFor();
+        process.waitFor();
         LOGGER.info("Cloning process complete");
     }
 
@@ -42,7 +42,7 @@ class Git {
         // TODO make these cancelable and put in a different thread than GUI
         LOGGER.info("Checking for new mods...");
         Process process = new ProcessBuilder(getGitBinaryLoc(), "reset", "--hard", "origin/master").start();
-            process.waitFor();
+        process.waitFor();
         LOGGER.info("Git pull complete");
     }
 

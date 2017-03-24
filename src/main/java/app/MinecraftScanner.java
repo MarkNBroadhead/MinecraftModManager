@@ -2,7 +2,9 @@ package app;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MinecraftScanner {
@@ -10,11 +12,11 @@ public class MinecraftScanner {
 
     private MinecraftScanner() {
     }
-    
-    public static Set<Path> getCommonMinecraftPaths() {
+
+    static List<Path> getCommonMinecraftPaths() {
         HashSet<Path> commonPaths = new HashSet<>();
         commonPaths.addAll(getCurseMinecraftFolders());
-        return commonPaths;
+        return new ArrayList<>(commonPaths);
     }
 
     static Set<Path> getCurseMinecraftFolders() {

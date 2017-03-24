@@ -35,6 +35,7 @@ public class App extends JDialog {
             "                                                                                                        |___/             \n";
 
     public App() {
+        Utils.touchCacheFiles();
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -105,6 +106,13 @@ public class App extends JDialog {
         });
     }
 
+    public static void main(String[] args) {
+        LOGGER.info("Minecraft Mod Manager starting at: " + LocalDateTime.now());
+        LOGGER.info(BANNER);
+        App dialog = new App();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
     }
 
     private void onCancel() {
@@ -128,13 +136,6 @@ public class App extends JDialog {
         }).start();
     }
 
-    public static void main(String[] args) {
-        LOGGER.info("Minecraft Mod Manager starting at: " + LocalDateTime.now());
-        LOGGER.info(BANNER);App dialog = new App();
-        dialog.pack();
-        dialog.setVisible(true);
-        Utils.touchCacheFiles();
-        System.exit(0);
     private void onOK() {
         try {
             Config.getConfig().save();
