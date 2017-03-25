@@ -1,6 +1,6 @@
 package app;
 
-import app.Exception.ConfigException;
+import app.exception.ConfigException;
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;

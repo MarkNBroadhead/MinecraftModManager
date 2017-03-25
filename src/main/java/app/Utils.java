@@ -1,6 +1,6 @@
 package app;
 
-import app.Exception.ConfigException;
+import app.exception.ConfigException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
