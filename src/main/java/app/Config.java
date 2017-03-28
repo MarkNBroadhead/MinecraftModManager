@@ -15,7 +15,7 @@ public final class Config implements Serializable {
     private static final String ACCESS_ERROR_MSG = "Error accessing configuration file " + CONFIG_FILE;
     private static final String READ_ERROR_MSG = "Error reading or parsing configuration file " + CONFIG_FILE;
     private static volatile Config instance;
-    private HashMap settings;
+    private HashMap<String, String> settings;
 
     private Config() throws ConfigException {
         instance = this;
