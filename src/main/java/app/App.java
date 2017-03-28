@@ -44,7 +44,7 @@ public class App extends JDialog {
         } catch (Exception ex) {
             LOGGER.error(ex);
         }
-        if (!config.getGameDir().isPresent()) {
+        if (!config.getGameDir().isPresent() && MinecraftScanner.getCommonMinecraftPaths().size() > 0) {
             config.setGameDir(MinecraftScanner.getCommonMinecraftPaths().get(0).toString());
             // show modal letting them know defaults are being set //todo
         }
